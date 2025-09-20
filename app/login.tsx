@@ -1,24 +1,40 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { supabase } from "@/utils/supabase";
 import { useState } from "react";
-import { Alert, Button, StyleSheet, TextInput } from "react-native";
+import { Alert, Button, Platform, StyleSheet, TextInput } from "react-native";
 
 type LoginScreenProps = {
   onLoginSuccess?: () => void;
 }
 
+function showAlert(title: string, message: string){
+  if (Platform.OS === 'web') {
+    window.alert(`${title}\n${message}`);
+  } else {
+    Alert.alert(title, message);
+  }
+}
+
 export default function LoginScreen({ onLoginSuccess}: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  function handleLogin() {
-    if (email === 'test@example.com' && password === 'password') {
-      Alert.alert('Login Successful');
-      if (onLoginSuccess) {
-        onLoginSuccess(); //Call the callback if provided
+  async function handleLogin() {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
+
+    if (error) {
+      if (error.message.toLowerCase().includes('invalid login credentials')) {
+        showAlert('Login failed', 'Wrong password.');
+      } else {
+        showAlert('Login failed', error.message);
       }
     } else {
-      Alert.alert('Invalid credentials');
+      showAlert('Success', 'Login Successful');
+      onLoginSuccess?.();
     }
   }
 
@@ -40,7 +56,7 @@ export default function LoginScreen({ onLoginSuccess}: LoginScreenProps) {
         value={password}
         onChangeText={setPassword}
       />
-      <Button title="Login" onPress={handleLogin} />
+      <Button title={loading ? "Logging in..." : "Login"} onPress={handleLogin} />
     </ThemedView>
   );
 }
