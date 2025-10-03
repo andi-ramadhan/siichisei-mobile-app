@@ -33,7 +33,6 @@ export default function LoginScreen({ onLoginSuccess}: LoginScreenProps) {
         showAlert('Login failed', error.message);
       }
     } else {
-      showAlert('Success', 'Login Successful');
       onLoginSuccess?.();
     }
   }
