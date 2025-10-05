@@ -17,21 +17,21 @@ export default function TabLayout() {
         tabBarButton: HapticTab,
       }}>
       <Tabs.Screen
-        name="chatScreen"
+        name="index"
         options={{
           title: 'Chat',
           tabBarIcon: ({ color }) => <AntDesign name="message" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="classScreen"
+        name="class"
         options={{
           title: 'Class',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="profileScreen"
+        name="profile"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => <AntDesign name="user" size={24} color={color} />,
